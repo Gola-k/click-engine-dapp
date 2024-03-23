@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { useState } from 'react';
+
 import { type I18n as I18nType } from '@lingui/core';
 import { Trans, t } from '@lingui/macro';
 import List from '@material-ui/core/List';
@@ -180,6 +182,7 @@ const BuildSection = ({
   ] = React.useState({});
 
   const columnsCount = getItemsColumns(windowSize, isLandscape);
+  const [showCreateNFT, setShowCreateNFT] = useState(false);
 
   const allGameTemplatesAndExamplesFlaggedAsGameCount = React.useMemo(
     () =>
@@ -478,6 +481,7 @@ const BuildSection = ({
               </IconButton>
             </LineStackLayout>
           </Column>
+
           <Column noMargin>
             <LineStackLayout noMargin>
               <RaisedButton
@@ -505,11 +509,13 @@ const BuildSection = ({
                   )
                 }
                 onClick={() => {
-                  return <CreateNFT />;
+                  setShowCreateNFT(true);
                 }}
                 icon={<Add fontSize="small" />}
-                id="home-create-project-button"
+                id="home-create-asset-button"
               />
+              {showCreateNFT && <CreateNFT />}
+
               {canOpen && (
                 <>
                   <Text>

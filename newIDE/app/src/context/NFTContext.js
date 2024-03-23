@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect, useRef } from 'react';
 import Web3Modal from 'web3modal';
-import { ethers } from 'ethers';
 import axios from 'axios';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 
@@ -9,6 +8,7 @@ import { MarketAddress, MarketAddressABI } from './constants';
 
 // const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 export const NFTContext = React.createContext();
+const ethers = require('ethers');
 const fetchContract = signerOrProvider =>
   new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
@@ -59,7 +59,7 @@ export const NFTProvider = ({ children }) => {
   const uploadToIPFS = async file => {
     const subdomain = 'https://gola-nft-marketplace.infura-ipfs.io';
     try {
-      // console.log(file);
+      console.log(file);
       const added = await client.current.add({ content: file });
 
       const url = `${subdomain}/ipfs/${added.path}`;
@@ -156,7 +156,7 @@ export const NFTProvider = ({ children }) => {
     const data = JSON.stringify({ name, description, image: fileUrl });
     const subdomain = 'https://gola-nft-marketplace.infura-ipfs.io';
     try {
-      // console.log(data);
+      console.log(data);
       const added = await client.current.add({ content: data });
       const url = `${subdomain}/ipfs/${added.path}`;
       await createSale(url, price, false, null);

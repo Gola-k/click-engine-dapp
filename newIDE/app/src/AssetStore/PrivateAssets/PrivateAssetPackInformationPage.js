@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import { useContext, useState } from 'react';
+import { NFTContext } from '../../context/NFTContext';
 import { I18n } from '@lingui/react';
 import {
   buyProductWithCredits,
@@ -370,6 +372,20 @@ const PrivateAssetPackInformationPage = ({
     [id, sellerId]
   );
 
+  // const onClickBuy = async () => {
+  //   const { buyNFT } = NFTContext;
+  //   const [nft, setNft] = useState({
+  //     image: '',
+  //     tokenId: '',
+  //     name: '',
+  //     owner: '',
+  //     price: '',
+  //     seller: '',
+  //   });
+  //   await buyNFT(nft);
+  //   return {};
+  // };
+
   const onClickBuy = React.useCallback(
     async () => {
       if (!assetPack) return;
@@ -405,7 +421,6 @@ const PrivateAssetPackInformationPage = ({
       selectedUsageType,
     ]
   );
-
   const onClickBuyWithCredits = React.useCallback(
     async () => {
       if (!privateAssetPackListingData || !assetPack) return;
