@@ -72,6 +72,7 @@
     "fontfaceobserver": "2.0.13",
     "fuse.js": "^6.5.3",
     "hardhat": "^2.22.1",
+    "ipfs-http-client": "^60.0.1",
     "js-worker-search": "^1.4.1",
     "jss-rtl": "^0.3.0",
     "lodash": "4.17.4",
@@ -112,6 +113,7 @@
     "source-map-explorer": "^2.0.1",
     "three": "0.160.0",
     "url-search-params": "^1.0.2",
+    "web3modal": "^1.9.12",
     "xxhashjs": "^0.2.2"
   },
   "overrides": {
