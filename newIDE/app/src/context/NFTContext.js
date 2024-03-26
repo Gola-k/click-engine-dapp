@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
+// /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect, useRef } from 'react';
 import Web3Modal from 'web3modal';
 import axios from 'axios';
@@ -227,11 +227,17 @@ export const NFTProvider = ({ children }) => {
     return items;
   };
 
-  useEffect(async () => {
-    checkIfWalletIsConnected();
-    const { data } = await fetchAuth();
-    auth.current = data;
-    client.current = getClient(auth.current);
+  useEffect(() => {
+    async function fetchData() {
+      await checkIfWalletIsConnected();
+      const { data } = await fetchAuth();
+      console.log(data);
+      auth.current = data;
+      console.log(auth.current);
+      client.current = getClient(auth.current);
+    }
+
+    fetchData();
   }, []);
 
   return (
