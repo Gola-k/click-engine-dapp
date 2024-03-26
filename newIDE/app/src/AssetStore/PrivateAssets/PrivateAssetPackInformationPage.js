@@ -372,78 +372,78 @@ const PrivateAssetPackInformationPage = ({
     [id, sellerId]
   );
 
-  const onClickBuy = async () => {
-    const { buyNFT } = NFTContext;
-    const [nft, setNft] = useState({
-      image: '',
-      tokenId: '',
-      name: '',
-      owner: '',
-      price: '',
-      seller: '',
-    });
-    await buyNFT(nft);
-    return {};
-  };
+  // const onClickBuy = async () => {
+  //   const { buyNFT } = NFTContext;
+  //   const [nft, setNft] = useState({
+  //     image: '',
+  //     tokenId: '',
+  //     name: '',
+  //     owner: '',
+  //     price: '',
+  //     seller: '',
+  //   });
+  //   await buyNFT(nft);
+  //   return {};
+  // };
 
-  // const onClickBuy = React.useCallback(
-  //   async () => {
-  //     if (!assetPack) return;
-  //     if (isAlreadyReceived) {
-  //       onAssetPackOpen(privateAssetPackListingData);
-  //       return;
-  //     }
+  const onClickBuy = React.useCallback(
+    async () => {
+      if (!assetPack) return;
+      if (isAlreadyReceived) {
+        onAssetPackOpen(privateAssetPackListingData);
+        return;
+      }
 
-  //     try {
-  //       const price = privateAssetPackListingData.prices.find(
-  //         price => price.usageType === selectedUsageType
-  //       );
-  //       sendAssetPackBuyClicked({
-  //         assetPackId: assetPack.id,
-  //         assetPackName: assetPack.name,
-  //         assetPackTag: assetPack.tag,
-  //         assetPackKind: 'private',
-  //         usageType: selectedUsageType,
-  //         currency: price ? price.currency : undefined,
-  //       });
+      try {
+        const price = privateAssetPackListingData.prices.find(
+          price => price.usageType === selectedUsageType
+        );
+        sendAssetPackBuyClicked({
+          assetPackId: assetPack.id,
+          assetPackName: assetPack.name,
+          assetPackTag: assetPack.tag,
+          assetPackKind: 'private',
+          usageType: selectedUsageType,
+          currency: price ? price.currency : undefined,
+        });
 
-  //       onOpenPurchaseDialog();
-  //     } catch (e) {
-  //       console.warn('Unable to send event', e);
-  //     }
-  //   },
-  //   [
-  //     assetPack,
-  //     onOpenPurchaseDialog,
-  //     privateAssetPackListingData,
-  //     isAlreadyReceived,
-  //     onAssetPackOpen,
-  //     selectedUsageType,
-  //   ]
-  // );
-  // const onClickBuyWithCredits = React.useCallback(
-  //   async () => {
-  //     if (!privateAssetPackListingData || !assetPack) return;
+        onOpenPurchaseDialog();
+      } catch (e) {
+        console.warn('Unable to send event', e);
+      }
+    },
+    [
+      assetPack,
+      onOpenPurchaseDialog,
+      privateAssetPackListingData,
+      isAlreadyReceived,
+      onAssetPackOpen,
+      selectedUsageType,
+    ]
+  );
+  const onClickBuyWithCredits = React.useCallback(
+    async () => {
+      if (!privateAssetPackListingData || !assetPack) return;
 
-  //     if (!profile || !limits) {
-  //       // User not logged in, suggest to log in.
-  //       onOpenLoginDialog();
-  //       return;
-  //     }
+      if (!profile || !limits) {
+        // User not logged in, suggest to log in.
+        onOpenLoginDialog();
+        return;
+      }
 
-  //     if (isAlreadyReceived) {
-  //       onAssetPackOpen(privateAssetPackListingData);
-  //       return;
-  //     }
+      if (isAlreadyReceived) {
+        onAssetPackOpen(privateAssetPackListingData);
+        return;
+      }
 
-  //     sendAssetPackBuyClicked({
-  //       assetPackId: assetPack.id,
-  //       assetPackName: assetPack.name,
-  //       assetPackTag: assetPack.tag,
-  //       assetPackKind: 'private',
-  //       currency: 'CREDITS',
-  //       usageType: selectedUsageType,
-  //     });
+      sendAssetPackBuyClicked({
+        assetPackId: assetPack.id,
+        assetPackName: assetPack.name,
+        assetPackTag: assetPack.tag,
+        assetPackKind: 'private',
+        currency: 'CREDITS',
+        usageType: selectedUsageType,
+      });
 
       const currentCreditsAmount = limits.credits.userBalance.amount;
       const assetPackPriceForUsageType = privateAssetPackListingData.creditPrices.find(
