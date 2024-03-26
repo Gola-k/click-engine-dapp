@@ -1,6 +1,7 @@
 // /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect, useRef } from 'react';
 import Web3Modal from 'web3modal';
+import { Buffer } from 'buffer';
 import axios from 'axios';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 
@@ -25,8 +26,23 @@ const fetchContract = signerOrProvider =>
 //   },
 // });
 
+const projectId = process.env.IPFS_PROJECT_ID;
+const projectSecret = process.env.API_KEY_SECRET;
+const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString(
+  'base64'
+)}`;
+
+// const client = ipfsHttpClient({
+//   host: 'ipfs.infura.io',
+//   port: 5001,
+//   protocol: 'https',
+//   headers: {
+//     authorization: auth,
+//   },
+// });
+
 export const NFTProvider = ({ children }) => {
-  const auth = useRef('');
+  console.log('auth: ', auth);
   const client = useRef({});
   const [currentAccount, setCurrentAccount] = useState('');
   const [isLoadingNFT, setIsLoadingNFT] = useState(false);
