@@ -12,17 +12,17 @@ const CreateNFT = () => {
     name: '',
     description: '',
   });
-  const { nftCurrency, isLoadingNFT, uploadToIPFS, createNFT } = useContext(
+  const { nftCurrency, isLoadingNFT, uploadToPinata, createNFT } = useContext(
     NFTContext
   );
   // const history = useHistory();
 
   const onDrop = useCallback(
     async acceptedFile => {
-      const url = await uploadToIPFS(acceptedFile[0]);
+      const url = await uploadToPinata(acceptedFile[0]);
       setFileUrl(url);
     },
-    [uploadToIPFS]
+    [uploadToPinata]
   );
 
   const {
@@ -54,7 +54,7 @@ const CreateNFT = () => {
   };
 
   const handleCreateNFT = () => {
-    // createNFT(formInput, fileUrl, () => history.push('/')); // Assuming it redirects to homepage after successful NFT creation
+    createNFT(formInput, fileUrl, () => console.log('NFT Created maybe')); // Assuming it redirects to homepage after successful NFT creation
   };
 
   if (isLoadingNFT) {

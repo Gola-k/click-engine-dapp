@@ -62,6 +62,7 @@ import useAlertDialog from '../../UI/Alert/useAlertDialog';
 import PasswordPromptDialog from '../PasswordPromptDialog';
 import Window from '../../Utils/Window';
 import RaisedButton from '../../UI/RaisedButton';
+import { Button } from '@material-ui/core';
 
 const cellSpacing = 8;
 
@@ -199,6 +200,22 @@ const PrivateAssetPackInformationPage = ({
   const [errorText, setErrorText] = React.useState<?React.Node>(null);
   const { isLandscape, isMediumScreen, windowSize } = useResponsiveWindowSize();
   const gdevelopTheme = React.useContext(GDevelopThemeContext);
+
+  // Gola-Start
+  const { buyNFT } = useContext(NFTContext);
+  const nft = {
+    image: '',
+    tokenId: '',
+    name: '',
+    owner: '',
+    price: '',
+    seller: '',
+  };
+
+  const handleBuyClick = async () => {
+    await buyNFT(nft);
+  };
+  // Gola-End
 
   const shouldUseOrSimulateAppStoreProduct =
     shouldUseAppStoreProduct() || simulateAppStoreProduct;
@@ -373,54 +390,76 @@ const PrivateAssetPackInformationPage = ({
   );
 
   // const onClickBuy = async () => {
+  //   // TODO: implement a function to call the buyNFT function in NFTContext for a private asset pack with a price as listed on the NFT store
   //   const { buyNFT } = NFTContext;
-  //   const [nft, setNft] = useState({
+  //   const nft = {
   //     image: '',
   //     tokenId: '',
   //     name: '',
   //     owner: '',
   //     price: '',
   //     seller: '',
-  //   });
+  //   };
   //   await buyNFT(nft);
-  //   return {};
   // };
 
-  const onClickBuy = React.useCallback(
-    async () => {
-      if (!assetPack) return;
-      if (isAlreadyReceived) {
-        onAssetPackOpen(privateAssetPackListingData);
-        return;
-      }
+  // const PrivateAssetPackInformationPage = () => {
+  //   const { buyNFT } = useContext(NFTContext);
+  //   const nft = {
+  //     image: '',
+  //     tokenId: '',
+  //     name: '',
+  //     owner: '',
+  //     price: '',
+  //     seller: '',
+  //   };
 
-      try {
-        const price = privateAssetPackListingData.prices.find(
-          price => price.usageType === selectedUsageType
-        );
-        sendAssetPackBuyClicked({
-          assetPackId: assetPack.id,
-          assetPackName: assetPack.name,
-          assetPackTag: assetPack.tag,
-          assetPackKind: 'private',
-          usageType: selectedUsageType,
-          currency: price ? price.currency : undefined,
-        });
+  //   const handleBuyClick = async () => {
+  //     await buyNFT(nft);
+  //   };
 
-        onOpenPurchaseDialog();
-      } catch (e) {
-        console.warn('Unable to send event', e);
-      }
-    },
-    [
-      assetPack,
-      onOpenPurchaseDialog,
-      privateAssetPackListingData,
-      isAlreadyReceived,
-      onAssetPackOpen,
-      selectedUsageType,
-    ]
-  );
+  //   return (
+  //     <Button className="buy-button" onClick={handleBuyClick}>
+  //       <Trans>Buy</Trans>
+  //     </Button>
+  //   );
+  // };
+
+  // const onClickBuy = React.useCallback(
+  //   async () => {
+  //     if (!assetPack) return;
+  //     if (isAlreadyReceived) {
+  //       onAssetPackOpen(privateAssetPackListingData);
+  //       return;
+  //     }
+
+  //     try {
+  //       const price = privateAssetPackListingData.prices.find(
+  //         price => price.usageType === selectedUsageType
+  //       );
+  //       sendAssetPackBuyClicked({
+  //         assetPackId: assetPack.id,
+  //         assetPackName: assetPack.name,
+  //         assetPackTag: assetPack.tag,
+  //         assetPackKind: 'private',
+  //         usageType: selectedUsageType,
+  //         currency: price ? price.currency : undefined,
+  //       });
+
+  //       onOpenPurchaseDialog();
+  //     } catch (e) {
+  //       console.warn('Unable to send event', e);
+  //     }
+  //   },
+  //   [
+  //     assetPack,
+  //     onOpenPurchaseDialog,
+  //     privateAssetPackListingData,
+  //     isAlreadyReceived,
+  //     onAssetPackOpen,
+  //     selectedUsageType,
+  //   ]
+  // );
   const onClickBuyWithCredits = React.useCallback(
     async () => {
       if (!privateAssetPackListingData || !assetPack) return;
@@ -658,7 +697,7 @@ const PrivateAssetPackInformationPage = ({
                               onUsageTypeChange={setSelectedUsageType}
                               simulateAppStoreProduct={simulateAppStoreProduct}
                               isAlreadyReceived={isAlreadyReceived}
-                              onClickBuy={onClickBuy}
+                              onClickBuy={handleBuyClick}
                               onClickBuyWithCredits={onClickBuyWithCredits}
                             />
                           )}

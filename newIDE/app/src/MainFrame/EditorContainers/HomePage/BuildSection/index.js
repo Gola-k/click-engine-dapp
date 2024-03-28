@@ -66,6 +66,7 @@ import ContextMenu, {
 } from '../../../../UI/Menu/ContextMenu';
 import type { ClientCoordinates } from '../../../../Utils/UseLongTouch';
 import CreateNFT from '../../../../pages/create-nft';
+
 const electron = optionalRequire('electron');
 const path = optionalRequire('path');
 

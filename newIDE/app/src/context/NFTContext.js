@@ -41,9 +41,37 @@ const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString(
 //   },
 // });
 
+//---UPLOAD TO IPFS FUNCTION
+const uploadToPinata = async file => {
+  if (file) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await axios({
+        method: 'post',
+        url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
+        data: formData,
+        headers: {
+          pinata_api_key: `bcbba8178a536b86d666`,
+          pinata_secret_api_key: `5e4ae39e064fb1f3b03010d2e4ae370c8507f7b68b797cb96831846f8b095d39`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      const ImgHash = `https://gateway.pinata.cloud/ipfs/${
+        response.data.IpfsHash
+      }`;
+      console.log(ImgHash);
+      return ImgHash;
+    } catch (error) {
+      console.log('Unable to upload image to Pinata');
+    }
+  }
+};
+
 export const NFTProvider = ({ children }) => {
   console.log('auth: ', auth);
   const client = useRef({});
+  console.log('client: ', client);
   const [currentAccount, setCurrentAccount] = useState('');
   const [isLoadingNFT, setIsLoadingNFT] = useState(false);
   const nftCurrency = 'ETH';
@@ -165,12 +193,13 @@ export const NFTProvider = ({ children }) => {
   };
 
   const createNFT = async (formInput, fileUrl, router) => {
+    alert('NFT has been listed');
     const { name, description, price } = formInput;
 
     if (!name || !description || !price || !fileUrl) return;
 
     const data = JSON.stringify({ name, description, image: fileUrl });
-    const subdomain = 'https://gola-nft-marketplace.infura-ipfs.io';
+    const subdomain = 'https://gateway.pinata.cloud/';
     try {
       console.log(data);
       const added = await client.current.add({ content: data });
@@ -185,7 +214,9 @@ export const NFTProvider = ({ children }) => {
   const buyNFT = async nft => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
+    console.log(connection);
     const provider = new ethers.providers.Web3Provider(connection);
+    // BrowserProvider
     const signer = provider.getSigner();
 
     const contract = fetchContract(signer);
@@ -251,6 +282,7 @@ export const NFTProvider = ({ children }) => {
       auth.current = data;
       console.log(auth.current);
       client.current = getClient(auth.current);
+      console.log(client.current);
     }
 
     fetchData();
@@ -263,6 +295,7 @@ export const NFTProvider = ({ children }) => {
         connectWallet,
         currentAccount,
         uploadToIPFS,
+        uploadToPinata,
         createNFT,
         fetchNFTs,
         fetchMyNFTsOrListedNFTs,
