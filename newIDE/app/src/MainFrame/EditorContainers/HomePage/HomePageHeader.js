@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useContext } from 'react';
 import { I18n } from '@lingui/react';
 import { t, Trans } from '@lingui/macro';
 import TranslateIcon from '@material-ui/icons/Translate';
@@ -16,6 +17,8 @@ import TextButton from '../../../UI/TextButton';
 import IconButton from '../../../UI/IconButton';
 import { isNativeMobileApp } from '../../../Utils/Platform';
 import NotificationChip from '../../../UI/User/NotificationChip';
+import { NFTContext } from '../../../context/NFTContext';
+import CreateNFT from '../../../pages/create-nft';
 const electron = optionalRequire('electron');
 
 type Props = {|
@@ -36,6 +39,7 @@ export const HomePageHeader = ({
   canSave,
 }: Props) => {
   const { isMobile } = useResponsiveWindowSize();
+  const { connectWallet, currentAccount } = useContext(NFTContext);
   return (
     <I18n>
       {({ i18n }) => (
@@ -79,6 +83,14 @@ export const HomePageHeader = ({
                   onClick={() =>
                     Window.openExternalURL('https://gdevelop.io/download')
                   }
+                />
+              )}
+              {connectWallet ? (
+                <FlatButton label={<Trans>Connected</Trans>} />
+              ) : (
+                <FlatButton
+                  label={<Trans>Connect</Trans>}
+                  onClick={connectWallet}
                 />
               )}
               <UserChip onOpenProfile={onOpenProfile} />

@@ -66,6 +66,8 @@ import ContextMenu, {
 } from '../../../../UI/Menu/ContextMenu';
 import type { ClientCoordinates } from '../../../../Utils/UseLongTouch';
 import CreateNFT from '../../../../pages/create-nft';
+import { NFTContext } from '../../../../context/NFTContext';
+import NFTCard from './NFTCard';
 
 const electron = optionalRequire('electron');
 const path = optionalRequire('path');
@@ -184,6 +186,13 @@ const BuildSection = ({
 
   const columnsCount = getItemsColumns(windowSize, isLandscape);
   const [showCreateNFT, setShowCreateNFT] = useState(false);
+
+  // Gola-Start
+  const { fetchNFTs } = React.useContext(NFTContext);
+  const [nfts, setNfts] = useState([]);
+  const [nftsCopy, setNftsCopy] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  // Gola-End
 
   const allGameTemplatesAndExamplesFlaggedAsGameCount = React.useMemo(
     () =>
@@ -361,7 +370,17 @@ const BuildSection = ({
     return b.fileMetadata.lastModifiedDate - a.fileMetadata.lastModifiedDate;
   });
 
+  React.useEffect(() => {
+    fetchNFTs().then(items => {
+      setNfts(items);
+      setNftsCopy(items);
+      setIsLoading(false);
+    });
+  }, []);
+
+  // Gola-Start ListedNFT
   const examplesAndTemplatesToDisplay = React.useMemo(
+    // Write code for using the fuction
     () =>
       getExampleAndTemplateItemsForBuildSection({
         receivedGameTemplates: authenticatedUser.receivedGameTemplates,
@@ -395,6 +414,7 @@ const BuildSection = ({
       allGameTemplatesAndExamplesFlaggedAsGameCount,
     ]
   );
+  // Gola-End ListedNFT
 
   const skeletonLineHeight = getProjectLineHeight({ isMobile });
   const pageContent = showAllGameTemplates ? (
@@ -410,6 +430,9 @@ const BuildSection = ({
           spacing={cellSpacing}
         >
           {examplesAndTemplatesToDisplay.gridItems}
+          {/* {nfts.map(nft => (
+            <NFTCard key={nft.tokenId} nft={nft} />
+          ))} */}
         </GridList>
         <Line justifyContent={'center'}>
           <FlatButton
@@ -447,8 +470,11 @@ const BuildSection = ({
       }
     >
       <SectionRow>
+        {/* {nfts.map(nft => (
+          <NFTCard key={nft.tokenId} nft={nft} />
+        ))} */}
         <Carousel
-          title={<Trans>Ready-made games</Trans>}
+          title={<Trans> </Trans>}
           displayItemTitles={false}
           browseAllLabel={<Trans>Browse all templates</Trans>}
           onBrowseAllClick={() => setShowAllGameTemplates(true)}
@@ -646,7 +672,10 @@ const BuildSection = ({
           cellHeight="auto"
           spacing={cellSpacing}
         >
-          {examplesAndTemplatesToDisplay.gridItems}
+          {/* {examplesAndTemplatesToDisplay.gridItems} */}
+          {nfts.map(nft => (
+            <NFTCard key={nft.tokenId} nft={nft} />
+          ))}
         </GridList>
       </SectionRow>
     </SectionContainer>
