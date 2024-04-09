@@ -128,6 +128,7 @@ const formatGameTemplateListingDataForCarousel = ({
       receivedGameTemplate =>
         receivedGameTemplate.id === gameTemplateListingData.id
     );
+  // console.log('gameTemplateListingData: ', gameTemplateListingData);
   return {
     id: gameTemplateListingData.id,
     title: gameTemplateListingData.name,

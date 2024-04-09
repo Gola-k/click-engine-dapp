@@ -382,6 +382,7 @@ const BuildSection = ({
   const examplesAndTemplatesToDisplay = React.useMemo(
     // Write code for using the fuction
     () =>
+      // change the data of privateGameTemplateListingDatas with data of nfts
       getExampleAndTemplateItemsForBuildSection({
         receivedGameTemplates: authenticatedUser.receivedGameTemplates,
         privateGameTemplateListingDatas,
@@ -402,6 +403,10 @@ const BuildSection = ({
           : 20,
         privateGameTemplatesPeriodicity: isMobile ? 2 : 3,
       }),
+    console.log(
+      'privateGameTemplateListingDatas: ',
+      privateGameTemplateListingDatas
+    ),
     [
       authenticatedUser.receivedGameTemplates,
       showAllGameTemplates,
@@ -672,7 +677,7 @@ const BuildSection = ({
           cellHeight="auto"
           spacing={cellSpacing}
         >
-          {/* {examplesAndTemplatesToDisplay.gridItems} */}
+          {examplesAndTemplatesToDisplay.gridItems}
           {nfts.map(nft => (
             <NFTCard key={nft.tokenId} nft={nft} />
           ))}

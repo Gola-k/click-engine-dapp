@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import { I18n } from '@lingui/react';
 import {
   buyProductWithCredits,
@@ -56,6 +57,7 @@ import { CreditsPackageStoreContext } from '../CreditsPackages/CreditsPackageSto
 import GDevelopThemeContext from '../../UI/Theme/GDevelopThemeContext';
 import RaisedButton from '../../UI/RaisedButton';
 import Play from '../../UI/CustomSvgIcons/Play';
+import { NFTContext } from '../../context/NFTContext';
 
 const cellSpacing = 8;
 
@@ -122,6 +124,8 @@ const PrivateGameTemplateInformationPage = ({
   onCreateWithGameTemplate,
   simulateAppStoreProduct,
 }: Props) => {
+  const { nft } = React.useContext(NFTContext);
+
   const { id, name, sellerId } = privateGameTemplateListingData;
   const { privateGameTemplateListingDatas } = React.useContext(
     PrivateGameTemplateStoreContext

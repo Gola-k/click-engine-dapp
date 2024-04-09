@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { useContext } from 'react';
 import axios from 'axios';
 import path from 'path-browserify';
 import { GDevelopShopApi } from './ApiConfigs';
@@ -8,10 +9,26 @@ import { type AuthenticatedUser } from '../../Profile/AuthenticatedUserContext';
 import { type MessageByLocale } from '../i18n/MessageByLocale';
 import { type Subscription } from './Usage';
 import { Trans } from '@lingui/macro';
+import { NFTContext } from '../../context/NFTContext';
+import useNFTServiceHook from './NftService';
+
+// const UseNFTContext = async () => {
+//   const { fetchNFTs } = useContext(NFTContext);
+//   const nfts = await fetchNFTs();
+//   return nfts;
+// };
+
+// const [nfts, setNfts] = useState([]);
 
 export const client = axios.create({
   baseURL: GDevelopShopApi.baseUrl,
 });
+
+// Make a react component and put this code in it:
+// const UseNFTContext = () => {
+//   const { nfts } = useContext(NFTContext);
+//   return props => <React.Fragment>{props.children(nfts)}</React.Fragment>;
+// };
 
 // Gola-Start
 type StripeAndPaypalPrice = {|
@@ -133,11 +150,79 @@ export const listListedPrivateAssetPacks = async (): Promise<
   return assetPacks;
 };
 
-export const listListedPrivateGameTemplates = async (): Promise<
+// const ListListedPrivateGameTemplates = async (): Promise<
+// Array<PrivateGameTemplateListingData>
+// > => {
+//   const response = await client.get('/game-template');
+//   const gameTemplates = response.data;
+//   if (!Array.isArray(gameTemplates)) {
+//     throw new Error('Invalid response from the game templates API');
+//   }
+
+//   return gameTemplates;
+// };
+
+// bakwas
+// React.useEffect(() => {
+//   fetchNFTs().then(items => {
+//     setNfts(items);
+//     setNftsCopy(items);
+//     setIsLoading(false);
+//   });
+// }, []);
+
+// export const ListListedPrivateGameTemplates = async (): Promise<
+//   Array<PrivateGameTemplateListingData>
+// > => {
+//   const { fetchNFTs } = React.useContext(NFTContext);
+//   const response = await client.get('/game-template');
+//   const gameTemplates = response.data;
+//   // const nfts = await UseNFTContext();
+//   // const nfts = await useNFTServiceHook();
+//   const nfts = await fetchNFTs();
+//   // const nfts = UseNFTContext();
+
+//   console.log('nfts in shop.js: ', nfts);
+//   const external_urls = 'https://gateway.pinata.cloud/';
+//   // nfts.map(
+//   //   nft => (
+//   //     (gameTemplates.appStoreProductId = nft.tokenId),
+//   //     (gameTemplates.thumbnailUrls = external_urls + nft.image),
+//   //     (gameTemplates.name = nft.name),
+//   //     (gameTemplates.description = nft.description),
+//   //     (gameTemplates.price = nft.price)
+//   //   )
+//   // );
+
+//   console.log('gameTemplates in shop.js: ', gameTemplates);
+
+//   // Gola-Start
+//   // First we need to access the nft data in this file
+
+//   // now we need to change the values of some attributes like name, description, thumbnailUrls and prices both of credit and stripe to the values of nft data and prices in ethers and image url of ipfs pinata
+//   // We know that the number of items in gameTemplates is not smae as of nft so we need to delete the items that are not in nft
+
+//   // Gola-End
+
+//   if (!Array.isArray(gameTemplates)) {
+//     throw new Error('Invalid response from the game templates API');
+//   }
+
+//   return gameTemplates;
+// };
+
+// fetchedPrivateGameTemplateListingDatas:
+
+export const ListListedPrivateGameTemplates = async (): Promise<
   Array<PrivateGameTemplateListingData>
 > => {
   const response = await client.get('/game-template');
   const gameTemplates = response.data;
+  // const nfts = await useNFTServiceHook();
+
+  // console.log('nfts in shop.js: ', nfts);
+  console.log('gameTemplates in shop.js: ', gameTemplates);
+
   if (!Array.isArray(gameTemplates)) {
     throw new Error('Invalid response from the game templates API');
   }
