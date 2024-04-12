@@ -125,9 +125,7 @@ function NewObjectDialog({
 
   const handleFetchNFTs = async () => {
     try {
-      // Fetch NFTs using the fetchNFTs function
       const fetchedNFTs = await fetchNFTs();
-      // Update the state with the fetched NFTs
       setNfts(fetchedNFTs);
     } catch (error) {
       console.error('Error fetching NFTs:', error);
@@ -346,18 +344,6 @@ function NewObjectDialog({
     [assetShortHeadersSearchResults, selectedFolders]
   );
 
-  // const handleFetchNFTs = async () => {
-  //   try {
-  //     const { fetchNFTs } = React.useContext(NFTContext);
-  //     const [nfts, setNfts] = useState([]);
-  //     // Inside the useEffect hook, you can safely call asynchronous functions
-  //     fetchNFTs().then(items => {
-  //       setNfts(items);
-  //     });
-  //   } catch (error) {
-  //     console.error('Error fetching NFTs:', error);
-  //   }
-  // };
 
   const mainAction =
     currentTab === 'asset-store' ? (
