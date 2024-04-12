@@ -33,7 +33,7 @@ import AlertMessage from '../UI/AlertMessage';
 import {
   useExtensionUpdateAlertDialog,
   useFetchAssets,
-} from './NewObjectDialog';
+} from './NewObjectDialog2';
 import { type InstallAssetOutput } from './InstallAsset';
 
 // We limit the number of assets that can be installed at once to avoid

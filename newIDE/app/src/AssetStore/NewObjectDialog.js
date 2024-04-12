@@ -2,41 +2,44 @@
 import { t, Trans } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 import * as React from 'react';
-import Dialog from '../UI/Dialog';
-import FlatButton from '../UI/FlatButton';
-import HelpButton from '../UI/HelpButton';
-import { Tabs } from '../UI/Tabs';
-import { AssetStore, type AssetStoreInterface } from '.';
-import { type ResourceManagementProps } from '../ResourcesList/ResourceSource';
-import { sendAssetAddedToProject } from '../Utils/Analytics/EventSender';
-import PreferencesContext from '../MainFrame/Preferences/PreferencesContext';
-import RaisedButton from '../UI/RaisedButton';
-import { AssetStoreContext } from './AssetStoreContext';
-import AssetPackInstallDialog from './AssetPackInstallDialog';
-import { type EnumeratedObjectMetadata } from '../ObjectsList/EnumerateObjects';
+import Dialog from '../UI/Dialog.js';
+import FlatButton from '../UI/FlatButton.js';
+import HelpButton from '../UI/HelpButton/index.js';
+import { Tabs } from '../UI/Tabs.js';
+import { AssetStore, type AssetStoreInterface } from './index.js';
+import { type ResourceManagementProps } from '../ResourcesList/ResourceSource.js';
+import { sendAssetAddedToProject } from '../Utils/Analytics/EventSender.js';
+import PreferencesContext from '../MainFrame/Preferences/PreferencesContext.js';
+import RaisedButton from '../UI/RaisedButton.js';
+import { AssetStoreContext } from './AssetStoreContext.js';
+import AssetPackInstallDialog from './AssetPackInstallDialog.js';
+import { type EnumeratedObjectMetadata } from '../ObjectsList/EnumerateObjects.js';
 import {
   installRequiredExtensions,
   installPublicAsset,
   checkRequiredExtensionsUpdate,
   checkRequiredExtensionsUpdateForAssets,
-} from './InstallAsset';
+} from './InstallAsset.js';
 import {
   type Asset,
   type AssetShortHeader,
   getPublicAsset,
   isPrivateAsset,
-} from '../Utils/GDevelopServices/Asset';
-import { type ExtensionShortHeader } from '../Utils/GDevelopServices/Extension';
-import EventsFunctionsExtensionsContext from '../EventsFunctionsExtensionsLoader/EventsFunctionsExtensionsContext';
-import Window from '../Utils/Window';
-import PrivateAssetsAuthorizationContext from './PrivateAssets/PrivateAssetsAuthorizationContext';
-import useAlertDialog from '../UI/Alert/useAlertDialog';
-import { useResponsiveWindowSize } from '../UI/Responsive/ResponsiveWindowMeasurer';
-import { enumerateAssetStoreIds } from './EnumerateAssetStoreIds';
+} from '../Utils/GDevelopServices/Asset.js';
+import { type ExtensionShortHeader } from '../Utils/GDevelopServices/Extension.js';
+import EventsFunctionsExtensionsContext from '../EventsFunctionsExtensionsLoader/EventsFunctionsExtensionsContext.js';
+import Window from '../Utils/Window.js';
+import PrivateAssetsAuthorizationContext from './PrivateAssets/PrivateAssetsAuthorizationContext.js';
+import useAlertDialog from '../UI/Alert/useAlertDialog.js';
+import { useResponsiveWindowSize } from '../UI/Responsive/ResponsiveWindowMeasurer.js';
+import { enumerateAssetStoreIds } from './EnumerateAssetStoreIds.js';
 import PromisePool from '@supercharge/promise-pool';
-import NewObjectFromScratch from './NewObjectFromScratch';
-import { getAssetShortHeadersToDisplay } from './AssetsList';
-import ErrorBoundary from '../UI/ErrorBoundary';
+import NewObjectFromScratch from './NewObjectFromScratch.js';
+import { getAssetShortHeadersToDisplay } from './AssetsList.js';
+import ErrorBoundary from '../UI/ErrorBoundary.js';
+import NFTCard from '../MainFrame/EditorContainers/HomePage/BuildSection/NFTCard.jsx';
+import { NFTContext } from '../context/NFTContext.js';
+import { useState, useEffect } from 'react';
 
 const isDev = Window.isDev();
 
@@ -116,12 +119,27 @@ function NewObjectDialog({
   canInstallPrivateAsset,
 }: Props) {
   const { isMobile } = useResponsiveWindowSize();
+  const { fetchNFTs } = React.useContext(NFTContext);
+  const [nfts, setNfts] = useState([]);
+
+
+  const handleFetchNFTs = async () => {
+    try {
+      // Fetch NFTs using the fetchNFTs function
+      const fetchedNFTs = await fetchNFTs();
+      // Update the state with the fetched NFTs
+      setNfts(fetchedNFTs);
+    } catch (error) {
+      console.error('Error fetching NFTs:', error);
+    }
+  };
+
   const {
     setNewObjectDialogDefaultTab,
     getNewObjectDialogDefaultTab,
   } = React.useContext(PreferencesContext);
   const [currentTab, setCurrentTab] = React.useState(
-    getNewObjectDialogDefaultTab()
+    getNewObjectDialogDefaultTab(), 'fetch-nft'
   );
 
   React.useEffect(() => setNewObjectDialogDefaultTab(currentTab), [
@@ -328,6 +346,19 @@ function NewObjectDialog({
     [assetShortHeadersSearchResults, selectedFolders]
   );
 
+  // const handleFetchNFTs = async () => {
+  //   try {
+  //     const { fetchNFTs } = React.useContext(NFTContext);
+  //     const [nfts, setNfts] = useState([]);
+  //     // Inside the useEffect hook, you can safely call asynchronous functions
+  //     fetchNFTs().then(items => {
+  //       setNfts(items);
+  //     });
+  //   } catch (error) {
+  //     console.error('Error fetching NFTs:', error);
+  //   }
+  // };
+
   const mainAction =
     currentTab === 'asset-store' ? (
       openedAssetPack ? (
@@ -381,6 +412,13 @@ function NewObjectDialog({
           }}
         />
       ) : null
+    ) : currentTab === 'fetch-nft' ? (
+      <FlatButton
+        key="fetch-nft"
+        primary
+        label={<Trans>Fetch NFTs</Trans>}
+        onClick={handleFetchNFTs}
+      />
     ) : !!selectedCustomObjectEnumeratedMetadata &&
       currentTab === 'new-object' ? (
       <RaisedButton
@@ -456,6 +494,11 @@ function NewObjectDialog({
                     value: 'new-object',
                     id: 'new-object-from-scratch-tab',
                   },
+                  {
+                    label: <Trans>Nft Card</Trans>,
+                    value: 'fetch-nft',
+                    id: 'nft-from-nft-tab',
+                  }
                 ]}
                 // Enforce scroll on mobile, because the tabs have long names.
                 variant={isMobile ? 'scrollable' : undefined}
@@ -482,6 +525,13 @@ function NewObjectDialog({
                 project={project}
                 i18n={i18n}
               />
+            )}
+            {currentTab === 'fetch-nft' && (
+              <div>
+                {nfts.map(nft => (
+                  <NFTCard key={nft.tokenId} nft={nft} />
+                ))}
+              </div>
             )}
           </Dialog>
           {isAssetPackDialogInstallOpen &&

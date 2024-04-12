@@ -116,5 +116,5 @@ contract NFTassets is ERC721URIStorage {
     }
 }
 
-// Deployed Contract address Sepolia: 0xe5555dC969Ad5125018Ac8494d7462b185389C0B
+// Deployed Contract address Sepolia: 0x5C643b253d9b6a6F010967b72daDCBb7a74827dD
 // Deployed Contract address localhost: 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512

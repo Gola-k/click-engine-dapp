@@ -8,7 +8,7 @@ import * as React from 'react';
 import { AutoSizer } from 'react-virtualized';
 import Background from '../UI/Background';
 import SearchBar from '../UI/SearchBar';
-import NewObjectDialog from '../AssetStore/NewObjectDialog';
+import NewObjectDialog from '../AssetStore/NewObjectDialog2';
 import newNameGenerator from '../Utils/NewNameGenerator';
 import Clipboard, { SafeExtractor } from '../Utils/Clipboard';
 import Window from '../Utils/Window';
