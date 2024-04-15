@@ -1,4 +1,4 @@
-import NFTassets from './NFTMarketplace.json';
+import NFTMarketplace from './NFTMarketplace.json';
 
-export const MarketAddress = '0xB6502AD0F98248aC336e28275372fdfD7b1Fab45';
-export const MarketAddressABI = NFTassets.abi;
+export const MarketAddress = '0x60bb41cA1ee8d2EFe9Eab541ba0872Aee4cA9242';
+export const MarketAddressABI = NFTMarketplace.abi;

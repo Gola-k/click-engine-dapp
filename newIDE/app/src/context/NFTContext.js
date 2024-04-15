@@ -1,4 +1,4 @@
-// /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect, useRef } from 'react';
 import Web3Modal from 'web3modal';
 import { Buffer } from 'buffer';
@@ -7,121 +7,18 @@ import { create as ipfsHttpClient } from 'ipfs-http-client';
 
 import { MarketAddress, MarketAddressABI } from './constants';
 
-// const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 export const NFTContext = React.createContext();
 const ethers = require('ethers');
-const fetchContract = signerOrProvider =>
-  new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
-// const projectId = process.env.IPFS_PROJECT_ID;
-// const projectSecret = process.env.API_KEY_SECRET;
-// const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString('base64')}`;
+const fetchContract = signerorProvider => 
+  new ethers.Contract(MarketAddress, MarketAddressABI, signerorProvider);
 
-// const client = ipfsHttpClient({
-//   host: 'ipfs.infura.io',
-//   port: 5001,
-//   protocol: 'https',
-//   headers: {
-//     authorization: auth,
-//   },
-// });
 
 const projectId = process.env.IPFS_PROJECT_ID;
 const projectSecret = process.env.API_KEY_SECRET;
 const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString(
   'base64'
 )}`;
-// const ImgHash = '';
-
-// const client = ipfsHttpClient({
-//   host: 'ipfs.infura.io',
-//   port: 5001,
-//   protocol: 'https',
-//   headers: {
-//     authorization: auth,
-//   },
-// });
-
-//---UPLOAD TO IPFS FUNCTION
-const uploadToPinata = async file => {
-  if (file) {
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const response = await axios({
-        method: 'POST',
-        url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
-        data: formData,
-        headers: {
-          pinata_api_key: `4a86a8be0709d53c0eba`,
-          pinata_secret_api_key: `b602a8ba8ce3a572fb3cb83573d93af1066f3fccee4d1647bde0e6299a9723ed`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      const CID = response.data.IpfsHash;
-      const ImgHash = `https://gateway.pinata.cloud/ipfs/${CID}`;
-      console.log(ImgHash);
-      return ImgHash;
-    } catch (error) {
-      console.log('Unable to upload image to Pinata');
-    }
-  }
-};
-
-const pinJSONToIPFS = async (name, description, external_url, CID) => {
-  try {
-    console.log('JWT', process.env.PINATA_JWT);
-    const data = JSON.stringify({
-      name: name,
-      description: description,
-      external_url: external_url,
-      image: `ipfs://${CID}`,
-    });
-    const res = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer  ${process.env.PINATA_JWT}`,
-      },
-      body: data,
-    });
-    const resData = await res.json();
-    console.log('Metadata uploaded,CID:', resData.IpfsHash);
-    return resData.IpfsHash;
-  } catch (error) {
-    console.log(error);
-  }
-};
-// const pinJSONToIPFS = async (name, description, external_url, CID) => {
-//   const JWT = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJjMzQ1ZDE3OC1kMWE3LTRiYTMtYjcwZS1hMjcwYTBlYjk2MDAiLCJlbWFpbCI6Imt1bmFsZ29sYTk5MzBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJGUkExIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9LHsiaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjRhODZhOGJlMDcwOWQ1M2MwZWJhIiwic2NvcGVkS2V5U2VjcmV0IjoiYjYwMmE4YmE4Y2UzYTU3MmZiM2NiODM1NzNkOTNhZjEwNjZmM2ZjY2VlNGQxNjQ3YmRlMGU2Mjk5YTk3MjNlZCIsImlhdCI6MTcxMTYyMjUwOH0.mk4uKvmLqHfYB6TLt8OUf8z57Vr9GRKSuWEZNsdvN0k`;
-//   const data = JSON.stringify({
-//     pinataContent: {
-//       name: name,
-//       description: description,
-//       external_url: 'https://pinata.cloud',
-//       image: CID,
-//     },
-//     pinataMetadata: {
-//       name: 'metadata.json',
-//     },
-//   });
-
-//   try {
-//     const res = await axios.post(
-//       'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-//       data,
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           Authorization: JWT,
-//         },
-//       }
-//     );
-//     console.log(res.data);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 export const NFTProvider = ({ children }) => {
   console.log('auth: ', auth);
@@ -146,16 +43,64 @@ export const NFTProvider = ({ children }) => {
   const connectWallet = async () => {
     if (!window.ethereum) return alert('Please install MetaMask');
 
-    const accounts = await window.ethereum.request({
-      method: 'eth_requestAccounts',
-    });
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
     setCurrentAccount(accounts[0]);
 
     window.location.reload();
   };
 
-  const uploadToIPFS = async file => {
+  const uploadToPinata = async file => {
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await axios({
+          method: 'POST',
+          url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
+          data: formData,
+          headers: {
+            pinata_api_key: '4a86a8be0709d53c0eba',
+            pinata_secret_api_key: 'b602a8ba8ce3a572fb3cb83573d93af1066f3fccee4d1647bde0e6299a9723ed',
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        const CID = response.data.IpfsHash;
+        const ImgHash = `https://gateway.pinata.cloud/ipfs/${CID}`;
+        console.log(ImgHash);
+        return ImgHash;
+      } catch (error) {
+        console.log('Unable to upload image to Pinata');
+      }
+    }
+  };
+
+  const pinJSONToIPFS = async (name, description, external_url, CID) => {
+    try {
+      console.log('JWT', process.env.PINATA_JWT);
+      const data = JSON.stringify({
+        name: name,
+        description: description,
+        external_url: external_url,
+        image: `ipfs://${CID}`,
+      });
+      const res = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer  ${process.env.PINATA_JWT}`,
+        },
+        body: data,
+      });
+      const resData = await res.json();
+      console.log('Metadata uploaded,CID:', resData.IpfsHash);
+      return resData.IpfsHash;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+    const uploadToIPFS = async file => {
     const subdomain = 'https://gateway.pinata.cloud';
     try {
       console.log(file);
@@ -175,7 +120,7 @@ export const NFTProvider = ({ children }) => {
     return data;
   };
 
-  const getClient = author => {
+  const getClient = (author) => {
     const responseClient = ipfsHttpClient({
       host: 'ipfs.infura.io',
       port: 5001,
@@ -200,12 +145,8 @@ export const NFTProvider = ({ children }) => {
     const listingPrice = await contract.getListingPrice();
 
     const transaction = !isReselling
-      ? await contract.createToken(url, price, {
-          value: listingPrice.toString(),
-        })
-      : await contract.resellToken(id, price, {
-          value: listingPrice.toString(),
-        });
+      ? await contract.createToken(url, price, { value: listingPrice.toString() })
+      : await contract.resellToken(id, price, { value: listingPrice.toString() });
 
     setIsLoadingNFT(true);
     await transaction.wait();
@@ -214,9 +155,7 @@ export const NFTProvider = ({ children }) => {
   const fetchNFTs = async () => {
     setIsLoadingNFT(false);
 
-    const provider = new ethers.JsonRpcProvider(
-      'https://eth-sepolia.g.alchemy.com/v2/0Hy758w6BteirxoloAs_K_vgQhMZuCIc'
-    );
+    const provider = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/0Hy758w6BteirxoloAs_K_vgQhMZuCIc');
     const contract = fetchContract(provider);
 
     const data = await contract.fetchMarketItems();
@@ -225,6 +164,7 @@ export const NFTProvider = ({ children }) => {
 
     const dataProxy = await contract.fetchMarketItems();
 
+
     // Iterate over each item in the data proxy
     const marketItems = [];
     for (let i = 0; i < dataProxy.length; i++) {
@@ -232,14 +172,16 @@ export const NFTProvider = ({ children }) => {
 
       // Extract information from the item proxy
       const tokenId = i + 1;
-      const seller = itemProxy[0];
-      const unformattedPrice = itemProxy[1];
-      const isSold = itemProxy[2];
+      const seller = itemProxy[1];
+      const owner = itemProxy[2]
+      const unformattedPrice = itemProxy[3];
+      const isSold = itemProxy[4];
 
       // Push the extracted data into the marketItems array
       marketItems.push({
         tokenId,
         seller,
+        owner,
         unformattedPrice,
         isSold,
       });
@@ -249,7 +191,7 @@ export const NFTProvider = ({ children }) => {
 
     const items = await Promise.all(
       marketItems.map(async item => {
-        const { tokenId, seller, unformattedPrice, isSold } = item;
+        const { tokenId, seller,owner, unformattedPrice, isSold } = item;
 
         // Fetch additional data related to the token
         const tokenURI = await contract.tokenURI(tokenId);
@@ -262,7 +204,7 @@ export const NFTProvider = ({ children }) => {
           price,
           tokenId: tokenId,
           seller,
-          owner: '',
+          owner,
           image,
           name,
           description,
@@ -273,59 +215,6 @@ export const NFTProvider = ({ children }) => {
     return items;
   };
 
-  //   const items = await Promise.all(
-  //     data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
-  //       try {
-  //         console.log('tokenId: ', tokenId);
-  //         const tokenURI = await contract.tokenURI('2');
-  //         console.log('tokenURI: ', tokenURI);
-  //         // Rest of your code
-  //         const {
-  //           data: { image, name, description },
-  //         } = await axios.get(tokenURI);
-  //         const price = ethers.utils.formatUnits(
-  //           unformattedPrice.toString(),
-  //           'ether'
-  //         );
-  //         return {
-  //           price,
-  //           tokenId: tokenId.toNumber(),
-  //           seller,
-  //           owner,
-  //           image,
-  //           name,
-  //           description,
-  //           tokenURI,
-  //         };
-  //       } catch (error) {
-  //         console.error('Error fetching tokenURI:', error);
-  //       }
-  //     })
-  //   );
-
-  //   return items;
-  // };
-
-  // const createNFT = async (formInput, fileUrl, router) => {
-  //   console.log('Creating NFT...');
-  //   const { name, description, price } = formInput;
-
-  //   if (!name || !description || !price || !fileUrl) return;
-
-  //   const data = JSON.stringify({ name, description, image: fileUrl });
-  //   const subdomain = 'https://gateway.pinata.cloud';
-
-  //   try {
-  //     console.log(data);
-  //     const ipfsHash = await uploadToPinata(data);
-  //     const url = `${subdomain}/ipfs/${ipfsHash}`;
-  //     await createSale(url, price, false, null); // Use your existing createSale function
-  //     router.push('/');
-  //   } catch (error) {
-  //     console.error('Error creating NFT:', error);
-  //     throw error;
-  //   }
-  // };
   const createNFT = async (formInput, fileUrl, router) => {
     const JWT =
       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJjMzQ1ZDE3OC1kMWE3LTRiYTMtYjcwZS1hMjcwYTBlYjk2MDAiLCJlbWFpbCI6Imt1bmFsZ29sYTk5MzBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJGUkExIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9LHsiaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjRhODZhOGJlMDcwOWQ1M2MwZWJhIiwic2NvcGVkS2V5U2VjcmV0IjoiYjYwMmE4YmE4Y2UzYTU3MmZiM2NiODM1NzNkOTNhZjEwNjZmM2ZjY2VlNGQxNjQ3YmRlMGU2Mjk5YTk3MjNlZCIsImlhdCI6MTcxMTYyMjUwOH0.mk4uKvmLqHfYB6TLt8OUf8z57Vr9GRKSuWEZNsdvN0k';
@@ -360,7 +249,7 @@ export const NFTProvider = ({ children }) => {
       pinataContent: {
         name: name,
         description: description,
-        external_url: 'https://pinata.cloud',
+        external_url: 'https://gateway.pinata.cloud/',
         image: fileUrl.substring(external_url.length),
       },
       pinataMetadata: {
@@ -401,7 +290,7 @@ export const NFTProvider = ({ children }) => {
     // });
   };
 
-  const buyNFT = async nft => {
+  const buyNFT = async (nft) => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     console.log(connection);
@@ -413,53 +302,43 @@ export const NFTProvider = ({ children }) => {
 
     const price = ethers.parseUnits(nft.price.toString(), 'ether');
 
-    const transaction = await contract.createMarketSale(nft.tokenId, {
-      value: price,
-    });
+    const transaction = await contract.createMarketSale(nft.tokenId, { value: price });
 
     setIsLoadingNFT(true);
     await transaction.wait();
     setIsLoadingNFT(false);
   };
 
-  const fetchMyNFTsOrListedNFTs = async type => {
+  const fetchMyNFTsOrListedNFTs = async (type) => {
     setIsLoadingNFT(false);
 
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.BrowserProvider(connection);
-    const signer = await provider.getSigner();
+    const signer = provider.getSigner();
 
     const contract = fetchContract(signer);
 
-    const data =
-      type === 'fetchItemsListed'
-        ? await contract.fetchItemsListed()
-        : await contract.fetchMyNFTs();
+    const data = type === 'fetchItemsListed'
+      ? await contract.fetchItemsListed()
+      : await contract.fetchMyNFTs();
 
-    const items = await Promise.all(
-      data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
-        const tokenURI = await contract.tokenURI(tokenId);
-        const {
-          data: { image, name, description },
-        } = await axios.get(tokenURI);
-        const price = ethers.utils.formatUnits(
-          unformattedPrice.toString(),
-          'ether'
-        );
+    const items = await Promise.all(data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+      const tokenURI = await contract.tokenURI(tokenId);
+      const { data: { image, name, description } } = await axios.get(tokenURI);
+      const price = ethers.utils.formatUnits(unformattedPrice.toString(), 'ether');
 
-        return {
-          price,
-          tokenId: tokenId.toNumber(),
-          seller,
-          owner,
-          image,
-          name,
-          description,
-          tokenURI,
-        };
-      })
-    );
+      return {
+        price,
+        tokenId: tokenId.toNumber(),
+        seller,
+        owner,
+        image,
+        name,
+        description,
+        tokenURI,
+      };
+    }));
 
     return items;
   };
@@ -479,21 +358,7 @@ export const NFTProvider = ({ children }) => {
   }, []);
 
   return (
-    <NFTContext.Provider
-      value={{
-        nftCurrency,
-        connectWallet,
-        currentAccount,
-        uploadToIPFS,
-        uploadToPinata,
-        createNFT,
-        fetchNFTs,
-        fetchMyNFTsOrListedNFTs,
-        buyNFT,
-        createSale,
-        isLoadingNFT,
-      }}
-    >
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, uploadToPinata, createNFT, fetchNFTs, fetchMyNFTsOrListedNFTs, buyNFT, createSale, isLoadingNFT }}>
       {children}
     </NFTContext.Provider>
   );

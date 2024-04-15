@@ -8,6 +8,16 @@ import './NFTCard.css';
 const shortenAddress = address =>
   `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
 
+// const shortenAddress = address => {
+//   // Check if address is a string
+//   if (typeof address !== 'string') {
+//     // If address is not a string, return an empty string
+//     return '';
+//   }
+//   // If address is a string, proceed with shortening it
+//   return `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
+// };
+
 const NFTCard = ({ nft, onProfilePage }) => {
   const { nftCurrency, buyNFT, isLoadingNFT } = useContext(NFTContext);
   const external_urls = 'https://gateway.pinata.cloud/';

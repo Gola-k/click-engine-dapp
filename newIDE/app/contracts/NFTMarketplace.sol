@@ -191,4 +191,4 @@ contract NFTMarketplace is ERC721URIStorage {
     }
 }
 
-// deployed on sepolia = 0xB6502AD0F98248aC336e28275372fdfD7b1Fab45
+// deployed on sepolia = 0x60bb41cA1ee8d2EFe9Eab541ba0872Aee4cA9242
