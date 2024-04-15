@@ -122,7 +122,6 @@ function NewObjectDialog({
   const { fetchNFTs } = React.useContext(NFTContext);
   const [nfts, setNfts] = useState([]);
 
-
   const handleFetchNFTs = async () => {
     try {
       const fetchedNFTs = await fetchNFTs();
@@ -137,7 +136,8 @@ function NewObjectDialog({
     getNewObjectDialogDefaultTab,
   } = React.useContext(PreferencesContext);
   const [currentTab, setCurrentTab] = React.useState(
-    getNewObjectDialogDefaultTab(), 'fetch-nft'
+    getNewObjectDialogDefaultTab(),
+    'fetch-nft'
   );
 
   React.useEffect(() => setNewObjectDialogDefaultTab(currentTab), [
@@ -206,6 +206,7 @@ function NewObjectDialog({
           }
         }
         const assets = await fetchAssets([assetShortHeader]);
+        console.log('assets in new dialog: ', assets);
         const asset = assets[0];
         const requiredExtensionInstallation = await checkRequiredExtensionsUpdateForAssets(
           {
@@ -343,7 +344,6 @@ function NewObjectDialog({
     },
     [assetShortHeadersSearchResults, selectedFolders]
   );
-
 
   const mainAction =
     currentTab === 'asset-store' ? (
@@ -484,7 +484,7 @@ function NewObjectDialog({
                     label: <Trans>Nft Card</Trans>,
                     value: 'fetch-nft',
                     id: 'nft-from-nft-tab',
-                  }
+                  },
                 ]}
                 // Enforce scroll on mobile, because the tabs have long names.
                 variant={isMobile ? 'scrollable' : undefined}

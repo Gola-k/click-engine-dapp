@@ -162,10 +162,10 @@ export const PrivateGameTemplateStoreStateProvider = ({
             } game templates from the store.`
           );
 
-          console.log(
-            `fetchedPrivateGameTemplateListingDatas:`,
-            fetchedPrivateGameTemplateListingDatas
-          );
+          // console.log(
+          //   `fetchedPrivateGameTemplateListingDatas:`,
+          //   fetchedPrivateGameTemplateListingDatas
+          // );
           console.log('nft in privateGameTemplateStoreContext.js: ', nfts);
           // Create an array to store all corresponding templates
           const correspondingGameTemplates = [];
@@ -237,7 +237,7 @@ export const PrivateGameTemplateStoreStateProvider = ({
           //   fetchedPrivateGameTemplateListingDatas.splice(nfts.length);
           // }
 
-          console.log('changed: ', correspondingGameTemplates);
+          // console.log('changed: ', correspondingGameTemplates);
 
           // Iterate over each NFT object
           // let correspondingGameTemplate;
@@ -289,7 +289,7 @@ export const PrivateGameTemplateStoreStateProvider = ({
           // });
 
           setPrivateGameTemplateListingDatas(correspondingGameTemplates);
-          console.log('after change: ', correspondingGameTemplates);
+          // console.log('after change: ', correspondingGameTemplates);
           const defaultTags = correspondingGameTemplates.reduce(
             (allCategories, privateGameTemplateListingData) => {
               return allCategories.concat(
