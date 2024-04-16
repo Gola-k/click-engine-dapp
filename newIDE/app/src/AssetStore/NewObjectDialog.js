@@ -119,9 +119,11 @@ function NewObjectDialog({
   canInstallPrivateAsset,
 }: Props) {
   const { isMobile } = useResponsiveWindowSize();
-  const { fetchNFTs } = React.useContext(NFTContext);
+  const { fetchNFTs, fetchMyNFTs} = React.useContext(NFTContext);
   const [nfts, setNfts] = useState([]);
-
+  const [myNFTs, setMyNFTs] = useState([]);
+  const [fetchMyNFTsClicked, setFetchMyNFTsClicked] = useState(false);
+  const [fetchMyNFTsError, setFetchMyNFTsError] = useState(null);
 
   const handleFetchNFTs = async () => {
     try {
@@ -132,12 +134,36 @@ function NewObjectDialog({
     }
   };
 
+  const handleFetchMyNFTs = async () => {
+    try {
+      const fetchedMyNFTs = await fetchMyNFTs('mynfts');
+      setMyNFTs(fetchedMyNFTs);
+      setFetchMyNFTsClicked(true);
+    } catch (error) {
+      console.error('Error fetching my NFTs:', error);
+    }
+  };
+
+//   useEffect(() => {
+//         if (fetchMyNFTsClicked) {
+//           const fetchNFTData = async () => {
+//             try {
+//               const fetchedNFTs = await fetchMyNFTs();
+//               setMyNFTs(fetchedNFTs);
+//             } catch (error) {
+//               console.error('Error fetching NFTs:', error);
+//             }
+//           };
+//           fetchNFTData();
+//         }
+//       }, [fetchMyNFTsClicked, fetchNFTs]);
+
   const {
     setNewObjectDialogDefaultTab,
     getNewObjectDialogDefaultTab,
   } = React.useContext(PreferencesContext);
   const [currentTab, setCurrentTab] = React.useState(
-    getNewObjectDialogDefaultTab(), 'fetch-nft'
+    getNewObjectDialogDefaultTab(), 'asset-store'
   );
 
   React.useEffect(() => setNewObjectDialogDefaultTab(currentTab), [
@@ -449,6 +475,12 @@ function NewObjectDialog({
                 onClick={handleClose}
                 id="close-button"
               />,
+              <FlatButton
+                key="fetch-mynfts"
+                primary
+                label={<Trans>Fetch My NFTs</Trans>}
+                onClick={() => handleFetchMyNFTs()}
+              />,
               mainAction,
             ]}
             onRequestClose={handleClose}
@@ -518,7 +550,7 @@ function NewObjectDialog({
                   <NFTCard key={nft.tokenId} nft={nft} />
                 ))}
               </div>
-            )}
+            )} 
           </Dialog>
           {isAssetPackDialogInstallOpen &&
             displayedAssetShortHeaders &&
