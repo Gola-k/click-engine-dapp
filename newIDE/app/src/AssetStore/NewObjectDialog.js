@@ -192,12 +192,20 @@ function NewObjectDialog({
   const showExtensionUpdateConfirmation = useExtensionUpdateAlertDialog();
 
   const onInstallNFT = React.useCallback(
-    // check if nft is bought
-    (nft: NFT) => {
-      if (!nft) return;
-      onCreateNewObject(nft.type);
-    },
-    [onCreateNewObject]
+    // make this function similar to the onInstallAsset function but instead of fetching assets we fetch NFTs
+    async nft => {
+      const external_url = 'https://gateway.pinata.cloud/';
+      const assetImage = external_url + nft.image;
+      sendAssetAddedToProject({
+        id: nft.tokenId,
+        name: nft.name,
+        assetPackName: openedAssetPack ? openedAssetPack.name : null,
+        assetPackTag: openedAssetPack ? openedAssetPack.tag : null,
+        assetPackId:
+          openedAssetPack && openedAssetPack.id ? openedAssetPack.id : null,
+        assetPackKind: 'private',
+      });
+    }
   );
 
   // This function gets called on add to the scene button
