@@ -403,10 +403,10 @@ const BuildSection = ({
           : 20,
         privateGameTemplatesPeriodicity: isMobile ? 2 : 3,
       }),
-    console.log(
-      'privateGameTemplateListingDatas: ',
-      privateGameTemplateListingDatas
-    ),
+    // console.log(
+    //   'privateGameTemplateListingDatas: ',
+    //   privateGameTemplateListingDatas
+    // ),
     [
       authenticatedUser.receivedGameTemplates,
       showAllGameTemplates,

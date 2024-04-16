@@ -10,9 +10,8 @@ import { MarketAddress, MarketAddressABI } from './constants';
 export const NFTContext = React.createContext();
 const ethers = require('ethers');
 
-const fetchContract = signerorProvider => 
+const fetchContract = signerorProvider =>
   new ethers.Contract(MarketAddress, MarketAddressABI, signerorProvider);
-
 
 const projectId = process.env.IPFS_PROJECT_ID;
 const projectSecret = process.env.API_KEY_SECRET;
@@ -43,7 +42,9 @@ export const NFTProvider = ({ children }) => {
   const connectWallet = async () => {
     if (!window.ethereum) return alert('Please install MetaMask');
 
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const accounts = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    });
 
     setCurrentAccount(accounts[0]);
 
@@ -61,7 +62,8 @@ export const NFTProvider = ({ children }) => {
           data: formData,
           headers: {
             pinata_api_key: '4a86a8be0709d53c0eba',
-            pinata_secret_api_key: 'b602a8ba8ce3a572fb3cb83573d93af1066f3fccee4d1647bde0e6299a9723ed',
+            pinata_secret_api_key:
+              'b602a8ba8ce3a572fb3cb83573d93af1066f3fccee4d1647bde0e6299a9723ed',
             'Content-Type': 'multipart/form-data',
           },
         });
@@ -84,14 +86,17 @@ export const NFTProvider = ({ children }) => {
         external_url: external_url,
         image: `ipfs://${CID}`,
       });
-      const res = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer  ${process.env.PINATA_JWT}`,
-        },
-        body: data,
-      });
+      const res = await fetch(
+        'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+        {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer  ${process.env.PINATA_JWT}`,
+          },
+          body: data,
+        }
+      );
       const resData = await res.json();
       console.log('Metadata uploaded,CID:', resData.IpfsHash);
       return resData.IpfsHash;
@@ -100,7 +105,7 @@ export const NFTProvider = ({ children }) => {
     }
   };
 
-    const uploadToIPFS = async file => {
+  const uploadToIPFS = async file => {
     const subdomain = 'https://gateway.pinata.cloud';
     try {
       console.log(file);
@@ -120,7 +125,7 @@ export const NFTProvider = ({ children }) => {
     return data;
   };
 
-  const getClient = (author) => {
+  const getClient = author => {
     const responseClient = ipfsHttpClient({
       host: 'ipfs.infura.io',
       port: 5001,
@@ -145,8 +150,12 @@ export const NFTProvider = ({ children }) => {
     const listingPrice = await contract.getListingPrice();
 
     const transaction = !isReselling
-      ? await contract.createToken(url, price, { value: listingPrice.toString() })
-      : await contract.resellToken(id, price, { value: listingPrice.toString() });
+      ? await contract.createToken(url, price, {
+          value: listingPrice.toString(),
+        })
+      : await contract.resellToken(id, price, {
+          value: listingPrice.toString(),
+        });
 
     setIsLoadingNFT(true);
     await transaction.wait();
@@ -155,7 +164,9 @@ export const NFTProvider = ({ children }) => {
   const fetchNFTs = async () => {
     setIsLoadingNFT(false);
 
-    const provider = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/0Hy758w6BteirxoloAs_K_vgQhMZuCIc');
+    const provider = new ethers.JsonRpcProvider(
+      'https://eth-sepolia.g.alchemy.com/v2/0Hy758w6BteirxoloAs_K_vgQhMZuCIc'
+    );
     const contract = fetchContract(provider);
 
     const data = await contract.fetchMarketItems();
@@ -172,7 +183,7 @@ export const NFTProvider = ({ children }) => {
       // Extract information from the item proxy
       const tokenId = itemProxy[0];
       const seller = itemProxy[1];
-      const owner = itemProxy[2]
+      const owner = itemProxy[2];
       const unformattedPrice = itemProxy[3];
       const isSold = itemProxy[4];
 
@@ -190,7 +201,7 @@ export const NFTProvider = ({ children }) => {
 
     const items = await Promise.all(
       marketItems.map(async item => {
-        const { tokenId, seller,owner, unformattedPrice, isSold } = item;
+        const { tokenId, seller, owner, unformattedPrice, isSold } = item;
 
         // Fetch additional data related to the token
         const tokenURI = await contract.tokenURI(tokenId);
@@ -290,7 +301,7 @@ export const NFTProvider = ({ children }) => {
     // });
   };
 
-  const buyNFT = async (nft) => {
+  const buyNFT = async nft => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     console.log(connection);
@@ -302,7 +313,9 @@ export const NFTProvider = ({ children }) => {
 
     const price = ethers.parseUnits(nft.price.toString(), 'ether');
 
-    const transaction = await contract.createMarketSale(nft.tokenId, { value: price });
+    const transaction = await contract.createMarketSale(nft.tokenId, {
+      value: price,
+    });
 
     setIsLoadingNFT(true);
     await transaction.wait();

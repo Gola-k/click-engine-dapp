@@ -129,6 +129,9 @@ function NewObjectDialog({
     try {
       const fetchedNFTs = await fetchNFTs();
       setNfts(fetchedNFTs);
+
+      // need to call a function onInstallNFT to make the nft show in editor
+      // onInstallNFT(arguments) needs to be called here with its arguments
     } catch (error) {
       console.error('Error fetching NFTs:', error);
     }
@@ -214,6 +217,17 @@ function NewObjectDialog({
   const fetchAssets = useFetchAssets();
   const showExtensionUpdateConfirmation = useExtensionUpdateAlertDialog();
 
+  const onInstallNFT = React.useCallback(
+    // check if nft is bought
+    (nft: NFT) => {
+      if (!nft) return;
+      onCreateNewObject(nft.type);
+    },
+    [onCreateNewObject]
+  );
+
+  // This function gets called on add to the scene button
+
   const onInstallAsset = React.useCallback(
     async (assetShortHeader): Promise<boolean> => {
       if (!assetShortHeader) return false;
@@ -232,6 +246,7 @@ function NewObjectDialog({
           }
         }
         const assets = await fetchAssets([assetShortHeader]);
+        console.log('assets in new dialog: ', assets);
         const asset = assets[0];
         const requiredExtensionInstallation = await checkRequiredExtensionsUpdateForAssets(
           {
@@ -265,6 +280,8 @@ function NewObjectDialog({
         if (!installOutput) {
           throw new Error('Unable to install private Asset.');
         }
+
+        // Useful function for NFT
         sendAssetAddedToProject({
           id: assetShortHeader.id,
           name: assetShortHeader.name,
@@ -369,7 +386,6 @@ function NewObjectDialog({
     },
     [assetShortHeadersSearchResults, selectedFolders]
   );
-
 
   const mainAction =
     currentTab === 'asset-store' ? (
@@ -516,7 +532,7 @@ function NewObjectDialog({
                     label: <Trans>Nft Card</Trans>,
                     value: 'fetch-nft',
                     id: 'nft-from-nft-tab',
-                  }
+                  },
                 ]}
                 // Enforce scroll on mobile, because the tabs have long names.
                 variant={isMobile ? 'scrollable' : undefined}
