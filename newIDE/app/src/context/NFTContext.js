@@ -261,6 +261,7 @@ export const NFTProvider = ({ children }) => {
         description: description,
         external_url: 'https://gateway.pinata.cloud/',
         image: fileUrl.substring(external_url.length),
+        
       },
       pinataMetadata: {
         name: 'metadata.json',
@@ -321,46 +322,71 @@ export const NFTProvider = ({ children }) => {
     setIsLoadingNFT(false);
   };
 
-  const fetchMyNFTsOrListedNFTs = async type => {
+  const fetchMyNFTs = async () => {
     setIsLoadingNFT(false);
 
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
-    const provider = new ethers.BrowserProvider(connection);
-    const signer = provider.getSigner();
+    console.log("connection ====>", connection)
+    const provider = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/0Hy758w6BteirxoloAs_K_vgQhMZuCIc');
+    // const provider = new ethers.BrowserProvider(connection);
+    // const signer = provider.getSigner();
+    console.log("provider ====>", provider)
 
-    const contract = fetchContract(signer);
+    const contract = fetchContract(provider);
+    console.log("contract ====>", contract)
 
-    const data =
-      type === 'fetchItemsListed'
-        ? await contract.fetchItemsListed()
-        : await contract.fetchMyNFTs();
+    // const data = type === 'fetchItemsListed'
+    //   ? await contract.fetchItemsListed()
+    //   : await contract.fetchMyNFTs();
+    
+    const data = await contract.fetchMyNFTs();
+      const dataProxy = data;
 
-    // Work needs to be done on data here
+      console.log("data in fetch ny NFT", data);
+    // Iterate over each item in the data proxy
+    const marketItems = [];
+    for (let i = 0; i < dataProxy.length; i++) {
+      const itemProxy = dataProxy[i];
 
-    const items = await Promise.all(
-      data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
-        const tokenURI = await contract.tokenURI(tokenId);
-        const {
-          data: { image, name, description },
-        } = await axios.get(tokenURI);
-        const price = ethers.utils.formatUnits(
-          unformattedPrice.toString(),
-          'ether'
-        );
+      // Extract information from the item proxy
+      const tokenId = itemProxy[0];
+      const seller = itemProxy[1];
+      const owner = itemProxy[2]
+      const unformattedPrice = itemProxy[3];
+      const isSold = itemProxy[4];
 
-        return {
-          price,
-          tokenId: tokenId.toNumber(),
-          seller,
-          owner,
-          image,
-          name,
-          description,
-          tokenURI,
-        };
-      })
-    );
+      // Push the extracted data into the marketItems array
+      marketItems.push({
+        tokenId,
+        seller,
+        owner,
+        unformattedPrice,
+        isSold,
+      });
+    }
+
+    console.log('marketItems: ', marketItems);
+
+
+    const items = await Promise.all(marketItems.map(async item => {
+      const { tokenId, seller, owner, unformattedPrice, isSold} = item; 
+      const tokenURI = await contract.tokenURI(tokenId);
+      console.log('tokenURI: ', tokenURI);
+      const { data: { image, name, description } } = await axios.get(tokenURI);
+      const price = ethers.formatUnits(unformattedPrice.toString(), 'ether');
+
+      return {
+        price,
+        tokenId: tokenId,
+        seller,
+        owner,
+        image,
+        name,
+        description,
+        tokenURI,
+      };
+    }));
 
     return items;
   };
@@ -380,21 +406,7 @@ export const NFTProvider = ({ children }) => {
   }, []);
 
   return (
-    <NFTContext.Provider
-      value={{
-        nftCurrency,
-        connectWallet,
-        currentAccount,
-        uploadToIPFS,
-        uploadToPinata,
-        createNFT,
-        fetchNFTs,
-        fetchMyNFTsOrListedNFTs,
-        buyNFT,
-        createSale,
-        isLoadingNFT,
-      }}
-    >
+    <NFTContext.Provider value={{ nftCurrency, connectWallet, currentAccount, uploadToIPFS, uploadToPinata, createNFT, fetchNFTs, fetchMyNFTs, buyNFT, createSale, isLoadingNFT }}>
       {children}
     </NFTContext.Provider>
   );
